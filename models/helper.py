@@ -5,7 +5,6 @@ from odoo.exceptions import MissingError
 
 def parish(object):
     """return current user's church/parish."""
-    print ("\n object ::::::::::::", object)
     parish_id = object.env.user.company_id.id
     return parish_id
 
