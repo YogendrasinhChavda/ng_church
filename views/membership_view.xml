@@ -92,8 +92,11 @@
             <field name="arch" type="xml">
                 <form string="References">
                     <header>
-                        <button name="verify" string="Verify" type="object" states="not_verify" class="oe_highlight" groups="base.group_hr_user" />
-                        <button name="notverify" string="Reset to Not Verify" type="object" states="verify" groups="base.group_hr_user" />
+                        <button name="verify" string="Verify" type="object"
+                            states="not_verify" class="oe_highlight"/>
+                        <!-- groups="base.group_hr_user" : group is in HR module. -->
+                        <button name="notverify" string="Reset to Not Verify"
+                            type="object" states="verify"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <group>

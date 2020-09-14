@@ -45,12 +45,12 @@ class DonationLine(models.Model):
     _description = "NG Church Donation Line"
 
     donation_id = fields.Many2one('ng_church.donation', string='Donation')
-    name = fields.Char(string='Date')
+    name = fields.Char(string='Name')
     date = fields.Date(string='Date', required=True)
     donor_id = fields.Many2one('res.partner', string='Donor')
     amount = fields.Float(string='Donated Amount', required=True)
     is_invoiced = fields.Boolean(string='Invoiced', readonly=True)
-    notes = fields.Char(related='donation_id.name.name')
+    notes = fields.Char(related='donation_id.name.name', string="Notes")
     church_id = fields.Many2one('res.company', default=parish)
 
     @api.constrains('amount')
@@ -79,7 +79,6 @@ class DonationLine(models.Model):
             company.donation_journal.id or False,
             'name': '{} Donation'.format(self.donor_id.name or 'Anonymous'),
             'voucher_type': 'sale'
-
         })
         return voucher
 
@@ -114,23 +113,21 @@ class Tithe(models.Model):
     _name = 'ng_church.tithe'
     _description = "NG Church Tithe"
 
-    def _compute_default_collection(self):
-        category = self.env['ng_church.collection'].name_search(
-            'Tithes', limit=1)
-        if category:
-            # Remove the item at the given position in the list,
-            # and unpack the tupple
-            category_id, category_name = category.pop(0)
-            return category_id
-        else:
-            self.env['ng_church.collection'].create({'name': 'Tithes'})
-            category = self.env['ng_church.collection'].name_search(
-                'Tithes', limit=1)
-            category_id, category_name = category.pop(0)
-            return category_id
+    @api.model
+    def default_get(self, fields):
+        """Default Get method."""
+        res = super(Tithe, self).default_get(fields)
+        category = self.env['ng_church.collection'].search([
+            ('name', '=', 'Tithes')], limit=1)
+        if not category:
+            category = self.env['ng_church.collection'].create(
+                {'name': 'Tithes'})
+        res.update({
+            'name': category.id,
+        })
+        return res
 
-    name = fields.Many2one('ng_church.collection', string='Collection',
-                           default=_compute_default_collection)
+    name = fields.Many2one('ng_church.collection', string='Collection')
     section_id = fields.Many2one(
         'church.sections', string="Church Section", required=True)
     service_id = fields.Many2one('ng_church.program', string="Church Service")
@@ -138,8 +135,8 @@ class Tithe(models.Model):
     church_id = fields.Many2one(
         'res.company', string='Church\'s Tithe', default=parish)
     is_pastor_tithe = fields.Boolean(string='Minister\'s Tithe')
-    tithe_line_ids = fields.One2many(
-        'ng_church.tithe_lines', 'tithe_id', string='Tithes')
+    tithe_line_ids = fields.One2many('ng_church.tithe_lines', 'tithe_id',
+                                     string='Tithes')
 
 
 class TitheLine(models.Model):
@@ -153,12 +150,12 @@ class TitheLine(models.Model):
     _description = "NG Church Tithe Lines"
 
     date = fields.Date(string='Date', required=True)
-    name = fields.Char(string='Date')
+    name = fields.Char(string='Name')
     tithe_type = fields.Selection(
         selection=[('members', 'Members'), ('pastor', 'Pastor'),
                    ('minister', 'Minister')], string='Category',
         default='members')
-    tither = fields.Many2one('res.partner', string='Name')
+    tither = fields.Many2one('res.partner', string='Tither Name')
     is_invoiced = fields.Boolean(string='Invoiced', readonly=True)
     tithe_id = fields.Many2one('ng_church.tithe', string='Tithe')
     amount = fields.Float('Amount', required=True)
@@ -218,23 +215,21 @@ class Offering(models.Model):
     _name = 'ng_church.offering'
     _description = "NG Church Offering"
 
-    def _compute_default_collection(self):
-        category = self.env['ng_church.collection'].name_search(
-            'Offering', limit=1)
-        if category:
-            # Remove the item at the given position in the list,
-            # and unpack the tupple
-            category_id, category_name = category.pop(0)
-            return category_id
-        else:
-            self.env['ng_church.collection'].create({'name': 'Offering'})
-            category = self.env['ng_church.collection'].name_search(
-                'Offering', limit=1)
-            category_id, category_name = category.pop(0)
-            return category_id
+    @api.model
+    def default_get(self, fields):
+        """Default Get method."""
+        res = super(Offering, self).default_get(fields)
+        category = self.env['ng_church.collection'].search([
+            ('name', '=', 'Offering')], limit=1)
+        if not category:
+            category = self.env['ng_church.collection'].create(
+                {'name': 'Offering'})
+        res.update({
+            'name': category.id,
+        })
+        return res
 
-    name = fields.Many2one('ng_church.collection', string='Collection Source',
-                           default=_compute_default_collection)
+    name = fields.Many2one('ng_church.collection', string='Collection Source')
     section_id = fields.Many2one('church.sections', string="Church Section",
                                  required=True)
     service_id = fields.Many2one('ng_church.program', string="Church Service")
@@ -250,7 +245,7 @@ class OfferingLine(models.Model):
     _description = "NG Church Offering Line"
 
     date = fields.Date(string='Date', required=True)
-    name = fields.Char(string='Date')
+    name = fields.Char(string='Name')
     is_invoiced = fields.Boolean(string='Invoiced')
     amount = fields.Float(string='Amount')
     offering_id = fields.Many2one('ng_church.offering', string='Offering')

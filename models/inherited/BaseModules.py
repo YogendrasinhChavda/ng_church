@@ -69,22 +69,23 @@ class Company(models.Model):
         'ng_church.tithe', 'church_id', string='Church Tithes')
 
     tithe_journal = fields.Many2one(
-        'account.journal', string="Journal", domain=journal)
+        'account.journal', string="Tithe Journal", domain=journal)
     tithe_account = fields.Many2one(
-        'account.account', string="Account", domain=account)
+        'account.account', string="Tithe Account", domain=account)
     donation_journal = fields.Many2one(
-        'account.journal', string="Journal", domain=journal)
+        'account.journal', string="Donation Journal", domain=journal)
     donation_account = fields.Many2one(
-        'account.account', string="Account", domain=account)
+        'account.account', string="Donation Account", domain=account)
     offering_journal = fields.Many2one(
-        'account.journal', string="Journal", domain=journal)
+        'account.journal', string="Offering Journal", domain=journal)
     offering_account = fields.Many2one(
-        'account.account', string="Account", domain=account)
+        'account.account', string="Offering Account", domain=account)
     pledge_journal = fields.Many2one(
-        'account.journal', string="Journal", domain=journal)
+        'account.journal', string="Pledge Journal", domain=journal)
     pledge_account = fields.Many2one(
-        'account.account', string="Account", domain=account)
-    transit_account = fields.Many2one('account.account', string='Account',
+        'account.account', string="Pledge Account", domain=account)
+    transit_account = fields.Many2one('account.account',
+                                      string='Transit Account',
                                       required=True,
                                       domain=[('user_type_id', '=', 5)])
 

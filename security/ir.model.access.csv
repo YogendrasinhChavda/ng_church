@@ -51,3 +51,11 @@ access_ng_church_collection,access_ng_church_collection,model_ng_church_collecti
 access_ng_church_lodgement,access_ng_church_lodgement,model_ng_church_lodgement,church_administrator,1,1,1,0
 
 access_ng_church_tithe_wizard,access_ng_church_tithe_wizard,model_ng_church_tithe_wizard,,1,1,1,0
+
+access_ng_church_followup_member,ng_church.followup_member,model_ng_church_followup_member,,1,1,1,0
+access_ng_church_followup_first_timer,ng_church.followup_first_timer,model_ng_church_followup_first_timer,,1,1,1,0
+access_ng_church_first_timer_stage,ng_church.first_timer_stage,model_ng_church_first_timer_stage,,1,1,1,0
+access_ng_church_member_stage,ng_church.member_stage,model_ng_church_member_stage,,1,1,1,0
+access_ng_church_offering_wizard,ng_church.offering_wizard,model_ng_church_offering_wizard,,1,1,1,0
+access_ng_church_donation_wizard,ng_church.donation_wizard,model_ng_church_donation_wizard,,1,1,1,0
+

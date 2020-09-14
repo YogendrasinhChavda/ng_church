@@ -31,7 +31,7 @@ class Pastor(models.Model):
     users_id = fields.Many2one('res.users', string='User\'s Name',
                                required=True)
     pastor_hierarchy = fields.Selection(selection=pastor_harachies,
-                                        string='Position')
+                                        string='Pastor Position')
     lead_pastor = fields.Boolean(string='Lead Pastor')
     minister_hierarchy = fields.Selection(selection=minister_position,
                                           string='Position',

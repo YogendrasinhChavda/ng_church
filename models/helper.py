@@ -5,7 +5,15 @@ from odoo.exceptions import MissingError
 
 def parish(object):
     """return current user's church/parish."""
+    print ("\n object ::::::::::::", object)
     parish_id = object.env.user.company_id.id
+    return parish_id
+
+
+def parish_partner(object):
+    """return current user's church/parish."""
+    parish_id = object.env.user and object.env.user.company_id and \
+        object.env.user.company_id.partner_id.id or False
     return parish_id
 
 
@@ -28,7 +36,8 @@ def program_default_date(self, date=datetime.date.today()):
     print(self.name)
     if(str(self.name) != 'ng_church.program()'):
         if self.name.days is False:
-            raise MissingError('Service day is not set on the selected Church Program')
+            raise MissingError(
+                'Service day is not set on the selected Church Program')
         print("OK")
         day = self.name.days
         isoweekday = {
@@ -51,7 +60,8 @@ def program_default_date(self, date=datetime.date.today()):
 def program_default_date_tithe(self, date=datetime.date.today()):
     """ISO weekday."""
     if self.service_id.days is False:
-        raise MissingError('Service day is not set on the selected Church Program')
+        raise MissingError(
+            'Service day is not set on the selected Church Program')
     day = self.service_id.days
     isoweekday = {
         'monday': 1, 'tuesday': 2, 'wednesday': 3,

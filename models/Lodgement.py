@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 """."""
 from odoo import api, fields, models
-from .helper import parish
+from .helper import parish, parish_partner
 from odoo.exceptions import UserError, ValidationError, MissingError
 
 
@@ -37,17 +37,24 @@ class Lodgement(models.Model):
         account_move = self.env['account.move']
         account_move = account_move.create({
             'journal_id': self.journal_id.id,
-            'amount': self.amount, 'date': self.date
+            # 'amount': self.amount,
+            'partner_id': parish_partner(self),
+            'date': self.date
         })
         return account_move
 
     def _prepare_first_account_move_line(self, move_id):
+        if self.env.user and self.env.user.company_id and \
+                not self.env.user.company_id.transit_account:
+            raise MissingError('Please Configure'
+                               ' Transit Account in Company : [ {} ]'.
+                               format(self.env.user.company_id.name))
         payload = {
             'name': self.description,
             'journal_id': self.journal_id.id,
             'account_id': self.env.user.company_id.transit_account.id,
             'move_id': move_id,
-            'partner_id': parish(self),
+            'partner_id': parish_partner(self),
             'quantity': 1,
             'credit': abs(self.amount),
             'debit': 0.0,
@@ -66,7 +73,7 @@ class Lodgement(models.Model):
             'name': self.description,
             'account_id': self.journal_id.default_debit_account_id.id,
             'move_id': move_id,
-            'partner_id': parish(self),
+            'partner_id': parish_partner(self),
             'quantity': 1,
             'debit': abs(self.amount),
             'credit': 0.0,
